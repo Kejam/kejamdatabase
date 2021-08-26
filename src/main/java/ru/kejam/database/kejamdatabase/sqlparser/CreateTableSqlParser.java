@@ -2,7 +2,6 @@ package ru.kejam.database.kejamdatabase.sqlparser;
 
 import lombok.extern.slf4j.Slf4j;
 import ru.kejam.database.kejamdatabase.execption.CommandParseException;
-import ru.kejam.database.kejamdatabase.execption.UnknownType;
 import ru.kejam.database.kejamdatabase.sqlparser.comand.CreateTableCommand;
 import ru.kejam.database.kejamdatabase.sqlparser.type.KejamTypeDB;
 
