@@ -9,8 +9,11 @@ import ru.kejam.database.kejamdatabase.sqlparser.type.KejamTypeDB;
 public class CreateTableSqlParser implements SqlParser{
     @Override
     public CreateTableCommand parseCommand(String sql) {
-        final CreateTableCommand command = new CreateTableCommand();
         final int indexStartFields = sql.indexOf("(");
+        final String tableName = sql.substring(0, indexStartFields)
+                .replaceAll(" +", "")
+                .replaceAll("createtable", "");
+        final CreateTableCommand command = new CreateTableCommand(tableName);
         final int endStartFields = sql.lastIndexOf(")");
         final String fields = sql.substring(indexStartFields + 1, endStartFields);
         final String[] rawFields = fields.split(",");

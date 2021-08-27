@@ -12,9 +12,11 @@ import java.util.Map;
 @Builder
 @AllArgsConstructor
 public class CreateTableCommand implements Command{
+    private final String tableName;
     private final Map<String, Class> fields;
 
-    public CreateTableCommand() {
+    public CreateTableCommand(String tableName) {
+        this.tableName = tableName;
         this.fields = new HashMap<>();
     }
 

@@ -21,5 +21,6 @@ public class CreateTableSqlParserTest {
         final Map<String, Class> fields = command.getFields();
         assertEquals(Integer.class, fields.get("id"));
         assertEquals(String.class, fields.get("name"));
+        assertEquals("start_table", command.getTableName());
     }
 }
