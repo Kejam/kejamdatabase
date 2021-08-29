@@ -9,4 +9,3 @@ select * from start_table;
 
 select (id, name) from start_table;
 
-select (id, name) from start_table where name = 'Alex' and id = '1';
