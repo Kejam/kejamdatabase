@@ -1,7 +1,11 @@
 package ru.kejam.database.kejamdatabase.sqlparser;
 
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Service;
 import ru.kejam.database.kejamdatabase.sqlparser.comand.SelectTableCommand;
 
+@Slf4j
+@Service
 public class SelectTableSqlParser implements SqlParser<SelectTableCommand> {
     @Override
     public SelectTableCommand parseCommand(String sql) {

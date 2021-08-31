@@ -18,4 +18,10 @@ public class SimpleTable implements Table{
                 }
         );
     }
+
+
+    @Override
+    public void add(Map<String, String> values) {
+        
+    }
 }

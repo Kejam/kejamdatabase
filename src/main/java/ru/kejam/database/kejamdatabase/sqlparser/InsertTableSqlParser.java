@@ -1,10 +1,14 @@
 package ru.kejam.database.kejamdatabase.sqlparser;
 
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Service;
 import ru.kejam.database.kejamdatabase.execption.CommandParseException;
 import ru.kejam.database.kejamdatabase.sqlparser.comand.InsertTableCommand;
 
 import java.util.Arrays;
 
+@Slf4j
+@Service
 public class InsertTableSqlParser implements SqlParser<InsertTableCommand> {
     @Override
     public InsertTableCommand parseCommand(String sql) {
