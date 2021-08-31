@@ -1,4 +1,4 @@
-package ru.kejam.database.kejamdatabase.model;
+package ru.kejam.database.kejamdatabase.controller.model;
 
 import lombok.Builder;
 import lombok.Data;

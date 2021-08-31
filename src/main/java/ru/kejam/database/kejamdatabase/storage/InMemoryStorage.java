@@ -6,6 +6,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import ru.kejam.database.kejamdatabase.execption.TableNotFoundException;
 import ru.kejam.database.kejamdatabase.sqlparser.comand.CreateTableCommand;
+import ru.kejam.database.kejamdatabase.sqlprocessor.CreateTableResult;
 import ru.kejam.database.kejamdatabase.storage.data.SimpleTable;
 import ru.kejam.database.kejamdatabase.storage.data.Table;
 
@@ -24,13 +25,21 @@ public class InMemoryStorage implements Storage {
     }
 
     @Override
-    public boolean createTable(CreateTableCommand command) {
+    public CreateTableResult createTable(CreateTableCommand command) {
         final String tableName = command.getTableName();
         if (tables.containsKey(tableName)) {
             log.error("Table {} exists", tableName);
+            return CreateTableResult.builder()
+                    .tableName(tableName)
+                    .status(false)
+                    .reason("Table already exists")
+                    .build();
         }
         tables.put(tableName, new SimpleTable(command.getFields(), tableName));
-        return true;
+        return CreateTableResult.builder()
+                .tableName(tableName)
+                .status(true)
+                .build();
     }
 
     @Override

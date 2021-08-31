@@ -6,8 +6,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import ru.kejam.database.kejamdatabase.model.InitialResponse;
-import ru.kejam.database.kejamdatabase.model.ResultQuery;
+import ru.kejam.database.kejamdatabase.controller.model.InitialResponse;
+import ru.kejam.database.kejamdatabase.controller.model.ResultQuery;
 
 @RestController
 @Slf4j

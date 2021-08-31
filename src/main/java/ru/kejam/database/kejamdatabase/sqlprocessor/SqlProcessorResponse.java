@@ -11,4 +11,6 @@ import java.util.List;
 public class SqlProcessorResponse {
     private final String tableName;
     private final List<Raw> raws;
+    private final boolean error;
+    private final String errorReason;
 }

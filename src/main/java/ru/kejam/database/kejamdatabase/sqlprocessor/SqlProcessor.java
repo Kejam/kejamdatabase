@@ -5,9 +5,12 @@ import org.springframework.stereotype.Service;
 import ru.kejam.database.kejamdatabase.sqlparser.CreateTableSqlParser;
 import ru.kejam.database.kejamdatabase.sqlparser.InsertTableSqlParser;
 import ru.kejam.database.kejamdatabase.sqlparser.SelectTableSqlParser;
+import ru.kejam.database.kejamdatabase.sqlparser.comand.CreateTableCommand;
 import ru.kejam.database.kejamdatabase.sqlparser.comand.InsertTableCommand;
 import ru.kejam.database.kejamdatabase.storage.Storage;
 import ru.kejam.database.kejamdatabase.storage.data.Table;
+
+import java.sql.SQLException;
 
 @Service
 @Slf4j
@@ -33,17 +36,49 @@ public class SqlProcessor {
             return insert(insertTableCommand);
         }
         if (sql.contains("select")) {
-
+            return null;
         }
         if (sql.contains("create")) {
+            final CreateTableCommand command = createTableSqlParser.parseCommand(sql);
+            return createTable(command);
+        }
+        return SqlProcessorResponse.builder()
+                .errorReason("Unknown sql command type")
+                .error(true)
+                .build();
+    }
 
+    private SqlProcessorResponse createTable(CreateTableCommand command) {
+        final CreateTableResult createTableResult = storage.createTable(command);
+        if (createTableResult.isStatus()) {
+            return SqlProcessorResponse.builder()
+                    .tableName(command.getTableName())
+                    .error(false)
+                    .build();
+        } else {
+            return SqlProcessorResponse.builder()
+                    .tableName(command.getTableName())
+                    .error(true)
+                    .errorReason(createTableResult.getReason())
+                    .build();
         }
     }
 
     private SqlProcessorResponse insert(InsertTableCommand insertTableCommand) {
         final String tableName = insertTableCommand.getTableName();
         final Table table = storage.getTable(tableName);
-        table.add(insertTableCommand.getValues());
-        return null;
+        try {
+            table.add(insertTableCommand.getValues());
+            return SqlProcessorResponse.builder()
+                    .tableName(tableName)
+                    .error(false)
+                    .build();
+        } catch (SQLException e) {
+            return SqlProcessorResponse.builder()
+                    .tableName(tableName)
+                    .error(true)
+                    .errorReason(e.getMessage())
+                    .build();
+        }
     }
 }
