@@ -7,7 +7,9 @@ import ru.kejam.database.kejamdatabase.sqlparser.InsertTableSqlParser;
 import ru.kejam.database.kejamdatabase.sqlparser.SelectTableSqlParser;
 import ru.kejam.database.kejamdatabase.sqlparser.comand.CreateTableCommand;
 import ru.kejam.database.kejamdatabase.sqlparser.comand.InsertTableCommand;
+import ru.kejam.database.kejamdatabase.sqlparser.comand.SelectTableCommand;
 import ru.kejam.database.kejamdatabase.storage.Storage;
+import ru.kejam.database.kejamdatabase.storage.data.Cell;
 import ru.kejam.database.kejamdatabase.storage.data.Table;
 
 import java.sql.SQLException;
@@ -36,7 +38,8 @@ public class SqlProcessor {
             return insert(insertTableCommand);
         }
         if (sql.contains("select")) {
-            return null;
+            final SelectTableCommand selectTableCommand = selectTableSqlParser.parseCommand(sql);
+            return select(selectTableCommand);
         }
         if (sql.contains("create")) {
             final CreateTableCommand command = createTableSqlParser.parseCommand(sql);
@@ -46,6 +49,25 @@ public class SqlProcessor {
                 .errorReason("Unknown sql command type")
                 .error(true)
                 .build();
+    }
+
+    private SqlProcessorResponse select(SelectTableCommand selectTableCommand) {
+        final String tableName = selectTableCommand.getTableName();
+        final Table table = storage.getTable(tableName);
+        try {
+            final Cell[][] cells = table.select(selectTableCommand.getNames());
+            return SqlProcessorResponse.builder()
+                    .tableName(tableName)
+                    .error(false)
+                    .cells(cells)
+                    .build();
+        } catch (Exception e) {
+            return SqlProcessorResponse.builder()
+                    .tableName(tableName)
+                    .error(true)
+                    .errorReason(e.getMessage())
+                    .build();
+        }
     }
 
     private SqlProcessorResponse createTable(CreateTableCommand command) {
