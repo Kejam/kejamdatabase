@@ -37,6 +37,9 @@ public class SimpleTable implements Table{
         if (checkCapacity(1)) {
             resizeTable();
         }
+        if (!checkInsert(this.cells[0], values)) {
+            throw new SQLException("Error input type. Please validate insert value!");
+        }
         for (int i = 0; i < this.cells[raw].length; i++) {
             final Cell cell = this.cells[raw][i];
             final String name = cell.getName();
@@ -61,6 +64,26 @@ public class SimpleTable implements Table{
         this.currentRaw++;
     }
 
+
+    private boolean checkInsert(Cell[] cells, Map<String, String> values) {
+        int matches = 0;
+        for (final Cell cell : cells) {
+            final String name = cell.getName();
+            if (values.containsKey(name)) {
+                if (cell.getClassName() == Integer.class) {
+                    try {
+                        Integer.parseInt(values.get(name));
+                        matches++;
+                    } catch (NumberFormatException e) {
+                        return false;
+                    }
+                } else {
+                    matches++;
+                }
+            }
+        }
+        return matches == values.size();
+    }
 
     @SneakyThrows
     @Override
