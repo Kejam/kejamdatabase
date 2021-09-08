@@ -7,11 +7,23 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import ru.kejam.database.kejamdatabase.controller.model.InitialResponse;
-import ru.kejam.database.kejamdatabase.controller.model.ResultQuery;
+import ru.kejam.database.kejamdatabase.sqlprocessor.SqlProcessor;
+import ru.kejam.database.kejamdatabase.sqlprocessor.SqlProcessorResponse;
+import ru.kejam.database.kejamdatabase.storage.Storage;
+
+import java.util.Set;
 
 @RestController
 @Slf4j
 public class ConnectionController {
+    private final SqlProcessor sqlProcessor;
+    private final Storage storage;
+
+    public ConnectionController(SqlProcessor sqlProcessor,
+                                Storage storage) {
+        this.sqlProcessor = sqlProcessor;
+        this.storage = storage;
+    }
 
     @GetMapping(path = "initdb")
     public ResponseEntity<InitialResponse> checkConnection() {
@@ -26,10 +38,15 @@ public class ConnectionController {
     }
 
     @PostMapping(path = "executeQuery")
-    public ResponseEntity<ResultQuery> executeQuery(@RequestParam("sql") String sql) {
+    public ResponseEntity<SqlProcessorResponse> executeQuery(@RequestParam("sql") String sql) {
         log.info("Try to execute sql {}", sql);
-        return ResponseEntity.ok(
-            ResultQuery.builder().result("Success result").build()
-        );
+        final SqlProcessorResponse sqlProcessorResponse = sqlProcessor.executeSql(sql);
+        return ResponseEntity.ok(sqlProcessorResponse);
+    }
+
+    @GetMapping(path = "list")
+    public ResponseEntity<Set<String>> listTables() {
+        log.info("Try to get list of tables");
+        return ResponseEntity.ok(storage.listTables());
     }
 }

@@ -12,6 +12,7 @@ import ru.kejam.database.kejamdatabase.storage.data.Table;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
 @Data
 @AllArgsConstructor
@@ -48,5 +49,10 @@ public class InMemoryStorage implements Storage {
             throw new TableNotFoundException(name);
         }
         return tables.get(name);
+    }
+
+    @Override
+    public Set<String> listTables() {
+        return tables.keySet();
     }
 }

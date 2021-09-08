@@ -23,7 +23,7 @@ public class SimpleTable implements Table{
                 (k,v) -> {
                     for (int i = 0; i < this.cells.length; i++) {
                         for (int y = 0; y < this.cells[i].length; y++) {
-                            this.cells[y][i] = new Cell(k, v, null);
+                            this.cells[i][y] = new Cell(k, v, null);
                         }
                     }
                 }
